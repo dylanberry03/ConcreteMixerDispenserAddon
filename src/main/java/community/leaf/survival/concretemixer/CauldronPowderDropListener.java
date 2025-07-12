@@ -60,14 +60,33 @@ public class CauldronPowderDropListener implements Listener {
 	@EventListener
 	@CancelledEvents(CancellationPolicy.REJECT)
 	public void onDispense(BlockDispenseEvent event) {
-	    ItemStack stack = event.getItem();
-	    if (Concrete.ofPowder(stack.getType()).isEmpty()) {
-	        return;
-	    }
+		Block block = event.getBlock();
 
-  	  ConcreteDebug.debug("Dispensing concrete powder: " + stack.getType());
- 	   // Let the item fly naturally — it will become an Entity and be detected
+		// Only process droppers or dispensers
+		if (block.getType() != Material.DROPPER && block.getType() != Material.DISPENSER) {
+			return;
+		}
+
+		ItemStack stack = event.getItem();
+		if (Concrete.ofPowder(stack.getType()).isEmpty()) {
+			return;
+		}
+
+		// Wait a tick and then check for the dropped item nearby
+		plugin.sync().delay(1).ticks().run(task -> {
+			block.getWorld().getNearbyEntities(block.getBoundingBox().expand(1.5, 1.5, 1.5)).stream()
+				.flatMap(entity -> Cast.as(Item.class, entity).stream())
+				.filter(item -> item.getItemStack().getType() == stack.getType())
+				.filter(item -> !transformationTasksByItemUuid.containsKey(item.getUniqueId()))
+				.limit(1)
+				.forEach(dropped -> {
+					ConcreteDebug.debugItem("Dispense drop", dropped);
+					transformConcretePowder(dropped);
+				});
+		});
 	}
+
+
 	
 	@EventListener
 	@CancelledEvents(CancellationPolicy.REJECT)
