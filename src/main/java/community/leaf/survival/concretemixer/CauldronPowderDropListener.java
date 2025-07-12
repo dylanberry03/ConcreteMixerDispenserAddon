@@ -7,9 +7,7 @@
  */
 package community.leaf.survival.concretemixer;
 
-import community.leaf.survival.concretemixer.ConcreteMixerPlugin;
 import community.leaf.survival.concretemixer.metrics.TransformationsPerHour;
-import community.leaf.survival.concretemixer.Concrete;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +21,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Optional;
 
 public final class CauldronPowderDropListener implements Listener {
     private final ConcreteMixerPlugin plugin;
@@ -39,7 +39,8 @@ public final class CauldronPowderDropListener implements Listener {
         Item item = event.getItemDrop();
         ItemStack stack = item.getItemStack();
 
-        if (!ConcreteType.isConcretePowder(stack.getType())) {
+        Optional<Concrete> maybeConcrete = Concrete.ofPowder(stack.getType());
+        if (maybeConcrete.isEmpty()) {
             return;
         }
 
@@ -52,7 +53,7 @@ public final class CauldronPowderDropListener implements Listener {
             if (block.getType() == Material.CAULDRON && block.getBlockData() instanceof Levelled cauldron) {
                 if (cauldron.getLevel() == 3) {
                     item.remove();
-                    Material concrete = ConcreteType.toConcrete(stack.getType());
+                    Material concrete = maybeConcrete.get().concrete();
                     ItemStack converted = new ItemStack(concrete, stack.getAmount());
                     loc.getWorld().dropItemNaturally(loc, converted);
                     counter.increment();
@@ -66,13 +67,11 @@ public final class CauldronPowderDropListener implements Listener {
         Item item = event.getEntity();
         ItemStack stack = item.getItemStack();
 
-        // Check for concrete powder
-        if (!ConcreteType.isConcretePowder(stack.getType())) {
+        Optional<Concrete> maybeConcrete = Concrete.ofPowder(stack.getType());
+        if (maybeConcrete.isEmpty()) {
             return;
         }
 
-        // OPTIONAL: Skip if item has a thrower
-        // This avoids double-processing.
         if (item.getThrower() != null) {
             return;
         }
@@ -86,7 +85,7 @@ public final class CauldronPowderDropListener implements Listener {
             if (block.getType() == Material.CAULDRON && block.getBlockData() instanceof Levelled cauldron) {
                 if (cauldron.getLevel() == 3) {
                     item.remove();
-                    Material concrete = ConcreteType.toConcrete(stack.getType());
+                    Material concrete = maybeConcrete.get().concrete();
                     ItemStack converted = new ItemStack(concrete, stack.getAmount());
                     loc.getWorld().dropItemNaturally(loc, converted);
                     counter.increment();
