@@ -60,28 +60,14 @@ public class CauldronPowderDropListener implements Listener {
 	@EventListener
 	@CancelledEvents(CancellationPolicy.REJECT)
 	public void onDispense(BlockDispenseEvent event) {
-		Block block = event.getBlock();
+	    ItemStack stack = event.getItem();
+	    if (Concrete.ofPowder(stack.getType()).isEmpty()) {
+	        return;
+	    }
 
-		// Only process droppers or dispensers
-		if (block.getType() != Material.DROPPER && block.getType() != Material.DISPENSER) {
-			return;
-		}
-
-		ItemStack stack = event.getItem();
-		if (Concrete.ofPowder(stack.getType()).isEmpty()) {
-			return;
-		}
-
-		event.setCancelled(true); // Stop default behavior
-
-		// Drop the item manually like a player drop
-		Item dropped = block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), stack.clone());
-		dropped.setVelocity(event.getVelocity());
-
-		ConcreteDebug.debugItem("Dispense drop", dropped);
-		transformConcretePowder(dropped);
+  	  ConcreteDebug.debug("Dispensing concrete powder: " + stack.getType());
+ 	   // Let the item fly naturally — it will become an Entity and be detected
 	}
-
 	
 	@EventListener
 	@CancelledEvents(CancellationPolicy.REJECT)
