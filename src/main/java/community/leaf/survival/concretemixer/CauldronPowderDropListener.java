@@ -1,5 +1,3 @@
-does this look right?
-
 /*
  * Copyright © 2022-2024, RezzedUp and Contributors <https://github.com/LeafCommunity/ConcreteMixer>
  *
@@ -32,8 +30,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import pl.tlinkowski.annotation.basic.NullOr;
-import org.bukkit.event.block.BlockDispenseEvent;
-
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,6 +55,32 @@ public class CauldronPowderDropListener implements Listener {
 			plugin.getLogger().info("Experimental item merging enabled.");
 		}
 	}
+
+	@EventListener
+	@CancelledEvents(CancellationPolicy.REJECT)
+	public void onDispense(BlockDispenseEvent event) {
+		Block block = event.getBlock();
+
+		// Only process droppers or dispensers
+		if (block.getType() != Material.DROPPER && block.getType() != Material.DISPENSER) {
+			return;
+		}
+
+		ItemStack stack = event.getItem();
+		if (Concrete.ofPowder(stack.getType()).isEmpty()) {
+			return;
+		}
+
+		event.setCancelled(true); // Stop default behavior
+
+		// Drop the item manually like a player drop
+		Item dropped = block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), stack.clone());
+		dropped.setVelocity(event.getVelocity());
+
+		ConcreteDebug.debugItem("Dispense drop", dropped);
+		transformConcretePowder(dropped);
+	}
+
 	
 	@EventListener
 	@CancelledEvents(CancellationPolicy.REJECT)
@@ -93,32 +115,6 @@ public class CauldronPowderDropListener implements Listener {
 			transformConcretePowder(aggregate);
 		}
 	}
-
-	@EventListener
-	@CancelledEvents(CancellationPolicy.REJECT)
-	public void onDispense(BlockDispenseEvent event) {
-		Block block = event.getBlock();
-
-		// Only process droppers or dispensers
-		if (block.getType() != Material.DROPPER && block.getType() != Material.DISPENSER) {
-			return;
-		}
-
-		ItemStack stack = event.getItem();
-		if (Concrete.ofPowder(stack.getType()).isEmpty()) {
-			return;
-		}
-
-		event.setCancelled(true); // Stop default behavior
-
-		// Drop the item manually like a player drop
-		Item dropped = block.getWorld().dropItemNaturally(block.getLocation().add(0.5, 0.5, 0.5), stack.clone());
-		dropped.setVelocity(event.getVelocity());
-
-		ConcreteDebug.debugItem("Dispense drop", dropped);
-		transformConcretePowder(dropped);
-	}
-
 	
 	@EventListener(ListenerOrder.MONITOR)
 	@CancelledEvents(CancellationPolicy.REJECT)
