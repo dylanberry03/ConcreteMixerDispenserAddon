@@ -40,6 +40,7 @@ public class ConcreteMixerPlugin extends JavaPlugin implements BukkitEventSource
 		this.permissions = new PermissionHandler(this);
 		this.updates = new UpdateChecker(this);
 		
+		TransformationsPerHour counter = new TransformationsPerHour(config);
 		events().register(new CauldronPowderDropListener(this));
 		
 		ConcreteMixerCommand command = new ConcreteMixerCommand(this);
@@ -47,6 +48,13 @@ public class ConcreteMixerPlugin extends JavaPlugin implements BukkitEventSource
 		executor.setExecutor(command);
 		executor.setTabCompleter(command);
 		
+		if (config.getOrDefault(Config.METRICS)) {
+			Metrics metrics = new Metrics(this, 15590);
+			
+			metrics.addCustomChart(new SingleLineChart(
+				"transformations-per-hour",
+				counter::totalTransformationsInTheLastHour
+			));
 		}
 	}
 	
