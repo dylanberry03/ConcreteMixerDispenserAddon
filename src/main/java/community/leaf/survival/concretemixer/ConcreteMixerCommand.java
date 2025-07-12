@@ -83,7 +83,7 @@ public class ConcreteMixerCommand implements TabExecutor {
 			}
 		}
 		
-		message(sender, "&7→&8&o Throw concrete powder into a cauldron... get concrete!");
+		message(sender, "&7→&8&o Throw concrete powder into a cauldron... get concrete! Or use a dispenser/dropper thanks to Dylan!");
 		return true;
 	}
 	
