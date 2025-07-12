@@ -7,7 +7,6 @@
  */
 package community.leaf.survival.concretemixer;
 
-import community.leaf.survival.concretemixer.metrics.TransformationsPerHour;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -26,11 +25,9 @@ import java.util.Optional;
 
 public final class CauldronPowderDropListener implements Listener {
     private final ConcreteMixerPlugin plugin;
-    private final TransformationsPerHour counter;
 
-    public CauldronPowderDropListener(ConcreteMixerPlugin plugin, TransformationsPerHour counter) {
+    public CauldronPowderDropListener(ConcreteMixerPlugin plugin) {
         this.plugin = plugin;
-        this.counter = counter;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -56,7 +53,6 @@ public final class CauldronPowderDropListener implements Listener {
                     Material concrete = maybeConcrete.get().concrete();
                     ItemStack converted = new ItemStack(concrete, stack.getAmount());
                     loc.getWorld().dropItemNaturally(loc, converted);
-                    counter.increment();
                 }
             }
         }, 5L);
@@ -88,7 +84,6 @@ public final class CauldronPowderDropListener implements Listener {
                     Material concrete = maybeConcrete.get().concrete();
                     ItemStack converted = new ItemStack(concrete, stack.getAmount());
                     loc.getWorld().dropItemNaturally(loc, converted);
-                    counter.increment();
                 }
             }
         }, 5L);
