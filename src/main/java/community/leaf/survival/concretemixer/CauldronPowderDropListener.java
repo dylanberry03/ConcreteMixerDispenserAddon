@@ -1,3 +1,5 @@
+does this look right?
+
 /*
  * Copyright © 2022-2024, RezzedUp and Contributors <https://github.com/LeafCommunity/ConcreteMixer>
  *
@@ -45,8 +47,9 @@ public class CauldronPowderDropListener implements Listener {
 	private final TransformationsPerHour counter;
 	private final boolean experimentalItemMerging;
 	
-	public CauldronPowderDropListener(ConcreteMixerPlugin plugin) {
+	public CauldronPowderDropListener(ConcreteMixerPlugin plugin, TransformationsPerHour counter) {
 		this.plugin = plugin;
+		this.counter = counter;
 		
 		this.experimentalItemMerging = ConcreteDebug.ENABLED || Boolean.parseBoolean(System.getProperty(
 			"community.leaf.survival.concretemixer.EnableExperimentalItemMerging"
