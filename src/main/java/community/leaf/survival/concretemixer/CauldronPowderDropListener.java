@@ -12,7 +12,6 @@ import community.leaf.eventful.bukkit.CancellationPolicy;
 import community.leaf.eventful.bukkit.ListenerOrder;
 import community.leaf.eventful.bukkit.annotations.CancelledEvents;
 import community.leaf.eventful.bukkit.annotations.EventListener;
-import community.leaf.survival.concretemixer.metrics.TransformationsPerHour;
 import community.leaf.survival.concretemixer.util.internal.ConcreteDebug;
 import community.leaf.tasks.TaskContext;
 import org.bukkit.Material;
@@ -42,12 +41,10 @@ public class CauldronPowderDropListener implements Listener {
 	private final Map<UUID, TaskContext<BukkitTask>> transformationTasksByItemUuid = new HashMap<>();
 	
 	private final ConcreteMixerPlugin plugin;
-	private final TransformationsPerHour counter;
 	private final boolean experimentalItemMerging;
 	
-	public CauldronPowderDropListener(ConcreteMixerPlugin plugin, TransformationsPerHour counter) {
+	public CauldronPowderDropListener(ConcreteMixerPlugin plugin) {
 		this.plugin = plugin;
-		this.counter = counter;
 		
 		this.experimentalItemMerging = ConcreteDebug.ENABLED || Boolean.parseBoolean(System.getProperty(
 			"community.leaf.survival.concretemixer.EnableExperimentalItemMerging"
