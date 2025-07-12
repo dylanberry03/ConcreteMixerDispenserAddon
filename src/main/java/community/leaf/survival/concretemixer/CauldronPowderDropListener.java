@@ -30,6 +30,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 import pl.tlinkowski.annotation.basic.NullOr;
+import org.bukkit.event.block.BlockDispenseEvent;
 
 import java.util.HashMap;
 import java.util.Map;
