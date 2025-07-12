@@ -41,7 +41,7 @@ public class ConcreteMixerPlugin extends JavaPlugin implements BukkitEventSource
 		this.updates = new UpdateChecker(this);
 		
 		TransformationsPerHour counter = new TransformationsPerHour(config);
-		events().register(new CauldronPowderDropListener(this));
+		events().register(new CauldronPowderDropListener(this, counter));
 		
 		ConcreteMixerCommand command = new ConcreteMixerCommand(this);
 		PluginCommand executor = initialized(getCommand("concretemixer"));
