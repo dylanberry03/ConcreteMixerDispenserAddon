@@ -189,7 +189,7 @@ public class CauldronPowderDropListener implements Listener {
 					iterations.outside++;
 					
 					// Took too long to drop in, might not even be a cauldron nearby for all we know
-					if (iterations.outside > 20) {
+					if (iterations.outside > 200) {
 						cancel(item, task);
 					}
 					
