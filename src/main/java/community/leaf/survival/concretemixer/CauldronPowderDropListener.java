@@ -9,7 +9,7 @@ package community.leaf.survival.concretemixer;
 
 import community.leaf.survival.concretemixer.ConcreteMixerPlugin;
 import community.leaf.survival.concretemixer.metrics.TransformationsPerHour;
-import community.leaf.survival.concretemixer.util.ConcreteType;
+import community.leaf.survival.concretemixer.Concrete;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
